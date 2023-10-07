@@ -112,21 +112,21 @@ def foward_pass(image_input: np.ndarray, points: List[List[int]]) -> np.ndarray:
 
     return masks
 
-def main_func(inputs) -> List[Image.Image]:
-    dots = inputs['mask']
-    points = mask_2_dots(dots)
+def main_func(inputs):
+    
     image_input = inputs['image']
-
-    masks = foward_pass(image_input, points)
-
-    image_input = Image.fromarray(image_input)
-    draw = ImageDraw.Draw(image_input)
-    for point in points[0]:
-        draw.ellipse((point[0] - 10, point[1] - 10, point[0] + 10, point[1] + 10), fill="red")
-
-    pred_masks = [image_input]
-    for i in range(masks.shape[2]):
-        pred_masks.append(Image.fromarray((masks[:,:,i] * 255).astype(np.uint8)))
+    classification, points = clipseg_prediction(image_input)
+    if classification:
+        masks = foward_pass(image_input, points)
+    
+        image_input = Image.fromarray(image_input)
+        
+        final_mask = masks[0]
+        mask_colors = np.zeros((final_mask.shape[0], final_mask.shape[1], 3), dtype=np.uint8)
+        mask_colors[final_mask, :] = np.array([[128, 0, 0]])
+        return Image.fromarray((mask_colors * 0.6 + image_input * 0.4).astype('uint8'), 'RGB')
+    else:
+        return Image.fromarray(image_input)
 
     return pred_masks
 
@@ -136,11 +136,10 @@ def reset_data():
 
 with gr.Blocks() as demo:
     gr.Markdown("# Demo to run Vehicle damage detection")
-    gr.Markdown("""This app uses the [Segment Anything](https://huggingface.co/facebook/sam-vit-base) model and clipseg model to get a vehicle damage area from image.
-    """)
+    gr.Markdown("""This app uses the SAM model and clipseg model to get a vehicle damage area from image.""")
     with gr.Row():
         image_input = gr.Image()
-        image_output = gr.Gallery()
+        image_output = gr.Image()
     
     image_button = gr.Button("Segment Image", variant='primary')
 
