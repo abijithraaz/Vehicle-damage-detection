@@ -25,6 +25,13 @@ prompts = ['damaged', 'car']
 damage_threshold = 0.4
 vehicle_threshold = 0.5
 
+def bbox_normalization(bbox, width, height):
+    height_coeff = height/352
+    width_coeff = width/352
+    normalized_bbox = [int(bbox[0]*width_coeff), int(bbox[1]*height_coeff),
+                       int(bbox[2]*width_coeff), int(bbox[3]*height_coeff)]
+    return normalized_bbox
+
 def bbox_area(bbox):
     area = (bbox[2]-bbox[0])*(bbox[3]-bbox[1])
     return area
@@ -64,7 +71,7 @@ def clipseg_prediction(image):
 
     # Vehicle checking
     if bbox_area(vehicle_bbox) > bbox_area(damage_bbox):
-        return True, damage_bbox
+        return True, bbox_normalization(damage_bbox)
     else:
         return False, []
     
