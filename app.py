@@ -111,8 +111,6 @@ def main_func(inputs):
     else:
         return Image.fromarray(image_input)
 
-    return pred_masks
-
 def reset_data():
     global cache_data
     cache_data = None
