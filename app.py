@@ -74,24 +74,7 @@ def clipseg_prediction(image):
         return True, bbox_normalization(damage_bbox)
     else:
         return False, []
-    
-
-
-def mask_2_dots(mask: np.ndarray) -> List[List[int]]:
-    gray = cv2.cvtColor(mask, cv2.COLOR_RGB2GRAY)
-    _, thresh = cv2.threshold(gray, 127, 255, 0)
-    kernel = np.ones((5,5),np.uint8)
-    closed = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
-    contours, _ = cv2.findContours(closed, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    points = []
-    for contour in contours:
-        moments = cv2.moments(contour)
-        cx = int(moments['m10']/moments['m00'])
-        cy = int(moments['m01']/moments['m00'])
-        points.append([cx, cy])
-    return [points]
-
- 
+     
 
 @torch.no_grad()
 def foward_pass(image_input: np.ndarray, points: List[List[int]]) -> np.ndarray:
