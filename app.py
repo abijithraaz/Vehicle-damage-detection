@@ -128,17 +128,14 @@ def reset_data():
     cache_data = None
 
 with gr.Blocks() as demo:
-    gr.Markdown("# How to use")
-    gr.Markdown("To start, input an image, then use the brush to create dots on the object which you want to segment, don't worry if your dots aren't perfect as the code will find the middle of each drawn item. Then press the segment button to create masks for the object that the dots are on.")
-    gr.Markdown("# Demo to run Segment Anything base model")
-    gr.Markdown("""This app uses the [Segment Anything](https://huggingface.co/facebook/sam-vit-base) model from Meta to get a mask from a points in an image.
+    gr.Markdown("# Demo to run Vehicle damage detection")
+    gr.Markdown("""This app uses the [Segment Anything](https://huggingface.co/facebook/sam-vit-base) model and clipseg model to get a vehicle damage area from image.
     """)
-    with gr.Tab("Flip Image"):
-        with gr.Row():
-            image_input = gr.Image(tool='sketch')
-            image_output = gr.Gallery()
-        
-        image_button = gr.Button("Segment Image")
+    with gr.Row():
+        image_input = gr.Image()
+        image_output = gr.Gallery()
+    
+    image_button = gr.Button("Segment Image", variant='primary')
 
     image_button.click(main_func, inputs=image_input, outputs=image_output)
     image_input.upload(reset_data)
