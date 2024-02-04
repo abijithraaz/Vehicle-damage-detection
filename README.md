@@ -5,7 +5,7 @@ Detecting and segmenting the damage in the vehicle images.
 
 ## Deployment
 Deployed in the huggingface free server.
-Link: https://huggingface.co/spaces/Abijith/Fleet-Damage_detection
+Link: [ClickHere] (https://huggingface.co/spaces/Abijith/Fleet-Damage_detection)
 
-!image [helpers/vdd.png]
+![image] (helpers/vdd.png)
 
